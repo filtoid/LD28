@@ -1,4 +1,4 @@
-var PLAYER_SPEED = 1;
+var PLAYER_SPEED = 2;
 
 function Player(){
 	this.rotation = Math.PI;
@@ -10,6 +10,7 @@ function Player(){
 	
 	this.downwardAcc = 0;
 	
+	this.isJumping = false;
 	this.soundMute = false;
 }
 
@@ -25,8 +26,7 @@ function PlayerDraw(ctx){
 
 }
 
-function playerUpdate(){
-		
+function playerUpdate(){	
 	// Save these for later in case we collide with something
 	var oldLocX = this.loc.x;
 	var oldLocY = this.loc.y;
@@ -35,11 +35,37 @@ function playerUpdate(){
 	this.loc.y += this.downwardAcc;
 	
 	var onFloor = false;
-	
-	if(_roomManager.checkCollision(this)){
-		this.downwardAcc = 0;
-		this.loc.y = oldLocY;
-		onFloor = true;
+	if(this.downwardAcc>0){
+		// Check to see if we have moved down into the floor
+		if(_roomManager.checkCollision(this)){
+			this.loc.y = oldLocY;
+			onFloor = true;
+			this.isJumping = false;
+			this.downwardAcc = 0;
+		}
+	}else if(this.downwardAcc<0){
+		// We are currently moving up
+		if(_roomManager.checkCollision(this)){
+			var quit=false;
+			this.loc.y = oldLocY;
+			var downacc = this.downwardAcc;
+			
+			while(quit==false){
+				this.loc.y += downacc;
+				if(_roomManager.checkCollision(this)){
+					this.loc.y = oldLocY;
+					downacc -= 1;
+					this.loc.y += downacc;
+					if(downacc<0){
+						quit=true;
+						this.loc.y = oldLocY;
+					}
+				}else{
+					quit=true;
+				}
+			}
+			this.downwardAcc = 0;
+		}
 	}
 	
 	// Do any animation stuff
@@ -50,10 +76,13 @@ function playerUpdate(){
 		this.loc.x+=PLAYER_SPEED;
 	}
 	
-	
-	if(isKeyPressed('W') && onFloor){
+	if(isKeyPressed('W') && this.isJumping==false){
+		this.isJumping = true;
 		this.downwardAcc = -12;
+	}else if(this.isJumping){
+		var temp = "fs";
 	}
+	
 	if(isKeyPressed('S')){
 		
 	}

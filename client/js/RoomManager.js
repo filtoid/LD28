@@ -30,6 +30,7 @@ function RoomManager(){
 	this.aryBlocks[index] = new Object();
 	this.aryBlocks[index].loc = new Location(120,300);
 	this.aryBlocks[index].size = new Location(20,20);
+	
 	index += 1;
 	this.aryBlocks[index] = new Object();
 	this.aryBlocks[index].loc = new Location(180,260);
@@ -38,6 +39,7 @@ function RoomManager(){
 	this.aryBlocks[index] = new Object();
 	this.aryBlocks[index].loc = new Location(200,260);
 	this.aryBlocks[index].size = new Location(20,20);
+	
 	index += 1;
 	this.aryBlocks[index] = new Object();
 	this.aryBlocks[index].loc = new Location(100,200);
@@ -45,6 +47,15 @@ function RoomManager(){
 	index += 1;
 	this.aryBlocks[index] = new Object();
 	this.aryBlocks[index].loc = new Location(120,200);
+	this.aryBlocks[index].size = new Location(20,20);
+	
+	index += 1;
+	this.aryBlocks[index] = new Object();
+	this.aryBlocks[index].loc = new Location(60,100);
+	this.aryBlocks[index].size = new Location(20,20);
+	index += 1;
+	this.aryBlocks[index] = new Object();
+	this.aryBlocks[index].loc = new Location(80,100);
 	this.aryBlocks[index].size = new Location(20,20);
 	
 	this.room = new Object();
