@@ -3,9 +3,12 @@ var PLAYER_SPEED = 1;
 function Player(){
 	this.rotation = Math.PI;
 	this.loc = new Location(20,20); // Location is the centre
+	this.size = new Location(10,19);
 	
 	this.draw = PlayerDraw;
 	this.update = playerUpdate;
+	
+	this.downwardAcc = 0;
 	
 	this.soundMute = false;
 }
@@ -17,16 +20,8 @@ function PlayerDraw(ctx){
 	var canWidth = canvas.width;
 	var canHeight = canvas.height;
 	
-	// debug console output
-	//document.getElementById("debug-console").innerText = "playerX: " + this.loc.x + ", playerY: " + this.loc.y + "drawLocX:" + drawLocX + ", drawLocY: " + drawLocY + ", canWidth: " + canWidth + ", canHeight: " + canHeight + ", roomWidth: " + roomWidth + ", roomHeight: " + roomHeight ;
-	
-	// We need to move the drawing context so the center of the image will be 0,0
-	//ctx.translate(drawLocX,drawLocY);
-	// Do the rotation
-	//ctx.rotate(this.rotation);
-	// We need to draw the image center at  0,0
 	ctx.fillStyle="#FF0000";
-	ctx.fillRect(this.loc.x, this.loc.y, BLOCK_SIZE, BLOCK_SIZE);
+	ctx.fillRect(this.loc.x, this.loc.y, this.size.x, this.size.y);
 
 }
 
@@ -36,6 +31,17 @@ function playerUpdate(){
 	var oldLocX = this.loc.x;
 	var oldLocY = this.loc.y;
 	
+	this.downwardAcc += _roomManager.gravity;
+	this.loc.y += this.downwardAcc;
+	
+	var onFloor = false;
+	
+	if(_roomManager.checkCollision(this)){
+		this.downwardAcc = 0;
+		this.loc.y = oldLocY;
+		onFloor = true;
+	}
+	
 	// Do any animation stuff
 	if(isKeyPressed('A')){
 		this.loc.x-=PLAYER_SPEED;
@@ -43,11 +49,19 @@ function playerUpdate(){
 	if(isKeyPressed('D')){
 		this.loc.x+=PLAYER_SPEED;
 	}
-	if(isKeyPressed('W')){
-		this.loc.y-=0.5;
+	
+	
+	if(isKeyPressed('W') && onFloor){
+		this.downwardAcc = -12;
 	}
 	if(isKeyPressed('S')){
-		this.loc.y+=0.5;
+		
 	}
+	
+	if(_roomManager.checkCollision(this)){
+		this.loc.x = oldLocX;
+		
+	}
+	
 }
 

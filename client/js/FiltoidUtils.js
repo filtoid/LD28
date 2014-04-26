@@ -87,3 +87,31 @@ function FiltoidHitTest(point, isForMovement, obj){
 	
 	return didHit;
 }
+
+function FiltoidCheckTwoSquaresCollide(sq1, sq2){
+	if(FiltoidIsPointInSquare(sq1.loc, sq2))
+		return true;
+		
+	var loc = new Location(sq1.loc.x + sq1.size.x, sq1.loc.y + sq1.size.y);
+	if(FiltoidIsPointInSquare(loc, sq2))
+		return true;
+	
+	var loc = new Location(sq1.loc.x, sq1.loc.y + sq1.size.y);
+	if(FiltoidIsPointInSquare(loc, sq2))
+		return true;
+	
+	var loc = new Location(sq1.loc.x + sq1.size.x, sq1.loc.y);
+	if(FiltoidIsPointInSquare(loc, sq2))
+		return true;
+	
+	
+	return false;
+}
+
+function FiltoidIsPointInSquare(pt, sq){
+	if(pt.x>=sq.loc.x && pt.x < sq.loc.x+sq.size.x 
+		&& pt.y >= sq.loc.y && pt.y < sq.loc.y+sq.size.y){
+			return true;
+	}
+	return false;
+}
